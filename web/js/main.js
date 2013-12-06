@@ -1,3 +1,3 @@
-var world = new gemu.World();
+var world = new Gemu.World();
 
 world.go();
