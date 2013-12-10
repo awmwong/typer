@@ -7,15 +7,24 @@
                                    maximum-scale=1.0,
                                    user-scalable=no">
     <link rel="stylesheet" href="http://cdn.kik.com/app/1/default.css">
-    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/style.css">
 
   </head>
   <body>
+    <div class="app-page" data-page="typer">
+      <canvas id="gemu-canvas" width="320px" height="460px"></canvas>
+    </div>
+
     <!-- put your pages here -->
-    <script src="http://zeptojs.com/zepto.min.js"></script>
+    <!-- <script src="http://zeptojs.com/zepto.min.js"></script> -->
     <script src="http://cdn.kik.com/app/1/app.js"></script>
+    <script src="http://cdn.kik.com/cards/0/cards.js"></script>
     <script src="js/lib/gemu/gemu.js"></script>
+    <script src="js/lib/gemu/event-manager.js"></script>
     <script src="js/lib/gemu/world.js"></script>
+    <script src="js/lib/gemu/entity.js"></script>
+    <script src="js/lib/gemu/scene.js"></script>
+    <script src="js/square.js"></script>
     <script src="js/main.js"></script>
   </body>
 </html>

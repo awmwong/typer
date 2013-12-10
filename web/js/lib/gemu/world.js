@@ -1,49 +1,48 @@
-// Namespace isolation
 var Gemu = Gemu || {};
 
 Gemu.World = function(params)
 {
-  /**
-   *  Private things
-   */
-  this._private = {};
-
   // Hold the current time
-  this._private.currentTime = new Date().getTime();
+  this.currentTime = new Date().getTime();
 
   // Hold the previous time for lag calculation
-  this._private.previousTime = this._private.currentTime;
-
-  // Update Rate
-  this._private.tickRate = 1000.0 / 120.0;
+  this.previousTime = this.currentTime;
 
   // Current lag
-  this._private.lag = 0;
+  this.lag = 0;
+
+  // Scene Management
+  this.scenes = [];
 
   // Framerate
-  this._private.framerateTimeAccumulator = 0;
-  this._private.framerateFramesAccumulator = 0;
+  this.framerateTimeAccumulator = 0;
+  this.framerateFramesAccumulator = 0;
 
-  // 
-
-  /**
-   *  Properties
-   */
   // Holds the DOM (canvas?) element
-  this.gameWindow = null;
+  this.gameWindow = document.getElementById("gemu-canvas");
+
+  if (typeof(this.gameWindow) === 'object') {
+    this.context = this.gameWindow.getContext("2d");
+  }
+
+  // Touch Events
+  this.gameWindow.addEventListener("touchstart", this.processInput.bind(this));
 
   // Size
-  this.size = { width: 0, height: 0};
-
-
+  this.size = { 
+    width : this.gameWindow.clientWidth,
+    height : this.gameWindow.clientHeight
+  };
 }
 
-Gemu.World.prototype.go = function()
+Gemu.World.tickRate = 1000 / 120;
+
+Gemu.World.prototype.run = function()
 {
   var world = this;
 
-  this._private.currentTime = new Date().getTime();
-  this._private.previousTime = this._private.currentTime;
+  this.previousTime = new Date().getTime();
+
 
   requestAnimFrame(function(){
     world.loop.call(world);
@@ -54,58 +53,112 @@ Gemu.World.prototype.loop = function()
 {
   var self = this;
 
-  requestAnimFrame(function() { self.loop.call(self) });
-
   var currentTime = new Date().getTime();
-  var elapsed = currentTime - self._private.previousTime;
+
+  var elapsed = currentTime - self.previousTime;
 
   // Prevent spiral of death
   if (elapsed >= 5000) {
-    elapsed = 5000;
+    elapsed = 0;
   }
 
   // Update the last time
-  self._private.previousTime = currentTime;
+  self.previousTime = currentTime;
   // Increment lag accumulator
-  self._private.lag += elapsed;
+  self.lag += elapsed;
 
   /**
    *  Framerate
    */
-  self._private.framerateTimeAccumulator += elapsed;
-  self._private.framerateFramesAccumulator++;
-  if (self._private.framerateTimeAccumulator >= 1000) {
-    console.log("framerate: " + self._private.framerateFramesAccumulator);
-
-    self._private.framerateTimeAccumulator = 0;
-    self._private.framerateFramesAccumulator = 0;
+  self.framerateTimeAccumulator += elapsed;
+  self.framerateFramesAccumulator++;
+  if (self.framerateTimeAccumulator >= 1000) {
+    // console.log("framerate: " + self.framerateFramesAccumulator);
+    self.framerateTimeAccumulator = 0;
+    self.framerateFramesAccumulator = 0;
   }
 
-  // Process Input
-  self.processInput();
 
-  while (self._private.lag >= self._private.tickRate) {
+  while (self.lag >= Gemu.World.tickRate) {
     // Update
     self.update();
-    self._private.lag -= self._private.tickRate;
+    self.lag -= Gemu.World.tickRate;
   }
 
   // Render
   self.render();
+
+  requestAnimFrame(function() { self.loop.call(self) });
+
 }
 
-Gemu.World.prototype.processInput = function()
+Gemu.World.prototype.processInput = function(event)
 {
+  var self = this;
+
+  self.getActiveScene().handleEvent(event);
 
 }
 
 Gemu.World.prototype.update = function()
 {
+  var self = this;
 
+  var activeScene = self.getActiveScene();
+  activeScene.update();
 }
 
 Gemu.World.prototype.render = function()
 {
+  var self = this;
 
+  self.clearCanvas();
+
+  self.getActiveScene().render(self.context);
 }
 
+Gemu.World.prototype.addScene = function(scene) 
+{
+  var self = this;
+
+  self.scenes.push(scene);
+}
+
+Gemu.World.prototype.activateScene = function(scene) 
+{
+  var self = this;
+
+  self.scenes.forEach(function(s) {
+    if (s === scene) {
+      s.active = true;
+    } else {
+      s.active = false;
+    }
+  });
+}
+
+Gemu.World.prototype.getActiveScene = function()
+{
+  var self = this;
+
+  var retVal;
+
+  self.scenes.some(function (s) {
+    if (s.active === true) {
+      retVal = s;
+    }
+  })
+
+  return retVal;
+}
+
+Gemu.World.prototype.clearCanvas = function() {
+  var self = this;
+
+  self.context.clearRect(
+    0,
+    0,
+    self.size.width,
+    self.size.height
+  );
+}
