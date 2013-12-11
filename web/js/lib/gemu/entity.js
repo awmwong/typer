@@ -5,10 +5,15 @@ Gemu.Entity = function(params)
 
   this.world = params.world;
 
-  this.position = { 
-    x : 0,
-    y : 0
-  };
+  if (params && params.position) {
+    this.position = params.position;
+  } else {
+    this.position = { 
+      x : 0,
+      y : 0
+    };
+  }
+
 
   this.size = {
     width : 0,
@@ -48,26 +53,26 @@ Gemu.Entity.prototype.draw = function(ctx)
 
 Gemu.Entity.prototype.update = function(elapsed) 
 {
-  this.setPosition(
-    this.position.x + this.velocity.x,
-    this.position.y + this.velocity.y);
+  // this.setPosition(
+  //   this.position.x + this.velocity.x,
+  //   this.position.y + this.velocity.y);
 
 
-  if (this.position.y <= 0){
-    this.velocity.y *= -1;
-  }
+  // if (this.position.y <= 0){
+  //   this.velocity.y *= -1;
+  // }
 
-  if (this.position.x <= 0) {
-    this.velocity.x *= -1;
-  }
+  // if (this.position.x <= 0) {
+  //   this.velocity.x *= -1;
+  // }
 
-  if (this.position.x + this.size.width >= this.world.size.width) {
-    this.velocity.x *= -1;
-  }
+  // if (this.position.x + this.size.width >= this.world.size.width) {
+  //   this.velocity.x *= -1;
+  // }
 
-  if (this.position.y + this.size.height >= this.world.size.height) {
-    this.velocity.y *= -1;
-  }
+  // if (this.position.y + this.size.height >= this.world.size.height) {
+  //   this.velocity.y *= -1;
+  // }
 
 }
 

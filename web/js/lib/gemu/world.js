@@ -36,6 +36,8 @@ Gemu.World = function(params)
     width : this.gameWindow.width,
     height : this.gameWindow.height
   };
+
+  Gemu.World.instance = this;
 }
 
 Gemu.World.tickRate = 1000 / 120;

@@ -72,10 +72,11 @@ Typer.Key.prototype.draw = function(ctx)
 
 Typer.Key.prototype.onTouchStart = function(event)
 {
-  console.log(this.keyText + " touched");
-
   var keyboard = this.parentEntity;
   keyboard.selectedKey = this;
+
+  // Fire keypress event on keyboard
+  keyboard.eventManager.raiseEvent('keypress', this.keyText);
 
   this.selected = true;
 }
