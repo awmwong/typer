@@ -27,11 +27,14 @@ Gemu.World = function(params)
 
   // Touch Events
   this.gameWindow.addEventListener("touchstart", this.processInput.bind(this));
+  this.gameWindow.addEventListener("touchend", this.processInput.bind(this));
+  this.gameWindow.addEventListener("touchmove", this.processInput.bind(this));
+
 
   // Size
   this.size = { 
-    width : this.gameWindow.clientWidth,
-    height : this.gameWindow.clientHeight
+    width : this.gameWindow.width,
+    height : this.gameWindow.height
   };
 }
 

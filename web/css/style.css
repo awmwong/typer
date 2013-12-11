@@ -1,7 +1,8 @@
 body {
-  /*background: red;*/
 }
 
 #gemu-canvas {
-  background: rgba(0,0,255,0.1);
+  background: #6D929B;
+  width: 320px;
+  height: 470px;
 }

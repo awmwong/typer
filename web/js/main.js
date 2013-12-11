@@ -5,18 +5,29 @@
 
   var gameScene = new Gemu.Scene();
 
-  var square = new Typer.Square({ "world" : world });
-  square.size = {
-    width: 50,
-    height: 50
+  var key = new Typer.Key(
+    { "world" : world, "keyText" : "Q" });
+
+  key.size = {
+
   }
 
-  gameScene.addEntity(square);
+  var keyboardEntity = new Typer.Keyboard({
+   "world" : world,
+   "position": { x : 0, y : 620}
+  });
+
+  keyboardEntity.size = {
+    width: 640,
+    height: 315
+  }
+
+  gameScene.addEntity(keyboardEntity);
+
   world.addScene(gameScene);
   world.activateScene(gameScene);
 
-  square.setPosition(25, 25);
-  square.setVelocity(1, 1);
+  key.setPosition(6, 552);
 
   world.run();
 })(App);
