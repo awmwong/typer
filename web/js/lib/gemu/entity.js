@@ -2,10 +2,13 @@ var Gemu = Gemu || {};
 
 Gemu.Entity = function(params)
 {
+  if (!params) {
+    params = {};
+  }
 
   this.world = params.world;
 
-  if (params && params.position) {
+  if (params.position) {
     this.position = params.position;
   } else {
     this.position = { 
@@ -20,13 +23,18 @@ Gemu.Entity = function(params)
     height : 0
   }
 
-  this.velocity = {
-    x : 0,
-    y : 0
-  };
+  if (params.velocity) {
+    this.velocity = params.velocity;
+  } else {
+   this.velocity = {
+     x : 0,
+     y : 0
+   }; 
+  }
 
   this.eventManager = new Gemu.EventManager();
-
+  
+  this.scene = null;
   this.parentEntity = null;
 
   this.subEntities = [];
@@ -35,9 +43,7 @@ Gemu.Entity = function(params)
 Gemu.Entity.prototype.render = function(ctx)
 {
   // To be extended by subclass
-  if (!this.drawCoordinates) {
-    this.drawCoordinates = this.getCanvasRelativePosition();
-  }
+  this.drawCoordinates = this.getCanvasRelativePosition();
 
   this.draw(ctx);
 
@@ -53,26 +59,17 @@ Gemu.Entity.prototype.draw = function(ctx)
 
 Gemu.Entity.prototype.update = function(elapsed) 
 {
-  // this.setPosition(
-  //   this.position.x + this.velocity.x,
-  //   this.position.y + this.velocity.y);
+  this.setPosition(
+    this.position.x + this.velocity.x,
+    this.position.y + this.velocity.y);
 
+  if (this.position.x + this.size.width >= Gemu.World.instance.size.width) {
+    this.velocity.x *= -1;
+  }
 
-  // if (this.position.y <= 0){
-  //   this.velocity.y *= -1;
-  // }
-
-  // if (this.position.x <= 0) {
-  //   this.velocity.x *= -1;
-  // }
-
-  // if (this.position.x + this.size.width >= this.world.size.width) {
-  //   this.velocity.x *= -1;
-  // }
-
-  // if (this.position.y + this.size.height >= this.world.size.height) {
-  //   this.velocity.y *= -1;
-  // }
+  if (this.position.y + this.size.height >= Gemu.World.instance.size.height) {
+    this.velocity.y *= -1;
+  }
 
 }
 

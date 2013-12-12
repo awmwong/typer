@@ -5,9 +5,9 @@ Typer.Bubble = function (params)
   Gemu.Entity.call(this, params);
 
   this.word = params.word;
-
-  this.wordPos = 3;
-  this.subWord = this.word.substr(0, this.wordPos);
+  this.wordPos = 0;
+  
+  this.subWord = "";
 
   // Compute width
   var globalCtx = Gemu.World.instance.context;
@@ -45,4 +45,10 @@ Typer.Bubble.prototype.draw = function(ctx)
   ctx.textAlign = "left";
   ctx.textBaseline = "middle"
   ctx.fillText(this.subWord, this.drawCoordinates.x + 10, this.drawCoordinates.y + (this.size.height/ 2.0));
+}
+
+Typer.Bubble.prototype.step = function()
+{
+  this.wordPos++;
+  this.subWord = this.word.substr(0, this.wordPos);
 }

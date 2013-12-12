@@ -13,11 +13,28 @@ Gemu.Scene.prototype.addEntity = function(entity)
   this.entities.push(entity) 
 }
 
+Gemu.Scene.prototype.removeEntity = function(entity)
+{
+  for (var i = 0; i < this.entities.length; i++) {
+    var e = this.entities[i];;
+
+    if (entity === e) {
+      this.entities.splice(i, 1);
+      break;
+    }
+  }
+}
+
 Gemu.Scene.prototype.update = function()
 {
+  var self = this;
+
   this.entities.forEach(function(entity) {
     entity.update();
+    self.resolveCollisions(entity);
+
   });
+
 }
 
 Gemu.Scene.prototype.render = function(ctx)
@@ -41,4 +58,9 @@ Gemu.Scene.prototype.handleEvent = function(event)
       entity.eventManager.raiseEvent(event.type, event);
     } 
   });
+}
+
+Gemu.Scene.prototype.resolveCollisions = function(entity)
+{
+
 }

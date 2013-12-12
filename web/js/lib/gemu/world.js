@@ -40,7 +40,7 @@ Gemu.World = function(params)
   Gemu.World.instance = this;
 }
 
-Gemu.World.tickRate = 1000 / 120;
+Gemu.World.tickRate = 1000 / 60;
 
 Gemu.World.prototype.run = function()
 {
