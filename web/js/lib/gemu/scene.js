@@ -19,7 +19,7 @@ Gemu.Scene.prototype.removeEntity = function(entity)
     var e = this.entities[i];;
 
     if (entity === e) {
-      this.entities.splice(i, 1);
+      e.deleted = true;
       break;
     }
   }
@@ -29,31 +29,38 @@ Gemu.Scene.prototype.update = function()
 {
   var self = this;
 
-  this.entities.forEach(function(entity) {
+  this.cleanupEntities();
+
+  var entities = this.entities.slice();
+
+  entities.forEach(function(entity) {
     entity.update();
     self.resolveCollisions(entity);
-
   });
 
 }
 
 Gemu.Scene.prototype.render = function(ctx)
 {
-  this.entities.forEach(function(entity) {
+  var entities = this.entities.slice();
+
+  entities.forEach(function(entity) {
     entity.render(ctx);
   });
 }
 
 Gemu.Scene.prototype.handleEvent = function(event)
 {
-  console.log(event);
+  // console.log(event);
   var x = event.changedTouches[0].clientX;
   var y = event.changedTouches[0].clientY;
 
   var scaledX = x * 2;
   var scaledY = y * 2;
 
-  this.entities.forEach(function(entity) {
+  var entitiesCopy = this.entities.slice();
+
+  entitiesCopy.forEach(function(entity) {
     if (entity.doesContainPoint(scaledX, scaledY)) {
       entity.eventManager.raiseEvent(event.type, event);
     } 
@@ -62,5 +69,20 @@ Gemu.Scene.prototype.handleEvent = function(event)
 
 Gemu.Scene.prototype.resolveCollisions = function(entity)
 {
+  // To be extended.
+}
 
+Gemu.Scene.prototype.cleanupEntities = function()
+{
+  var tempEnt = [];
+
+  for (var i = 0; i < this.entities.length; i++) {
+    var ent = this.entities[i];
+
+    if (!ent.deleted) {
+      tempEnt.push(ent);
+    }
+  }
+
+  this.entities = tempEnt;
 }

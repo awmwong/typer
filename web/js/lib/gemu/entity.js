@@ -32,12 +32,29 @@ Gemu.Entity = function(params)
    }; 
   }
 
+  if (params.acceleration) {
+    this.acceleration = params.acceleration;
+  } else {
+    this.acceleration = {
+      x : 0,
+      y : 0
+    }
+  }
+
+  if (params.collidable) {
+    this.collidable = params.collidable;
+  } else {
+    this.collidable = true;
+  }
+
   this.eventManager = new Gemu.EventManager();
-  
+
   this.scene = null;
   this.parentEntity = null;
 
+  this.deleted = false;
   this.subEntities = [];
+
 }
 
 Gemu.Entity.prototype.render = function(ctx)
@@ -59,18 +76,12 @@ Gemu.Entity.prototype.draw = function(ctx)
 
 Gemu.Entity.prototype.update = function(elapsed) 
 {
+  this.velocity.x += this.acceleration.x;
+  this.velocity.y += this.acceleration.y;
+
   this.setPosition(
     this.position.x + this.velocity.x,
     this.position.y + this.velocity.y);
-
-  if (this.position.x + this.size.width >= Gemu.World.instance.size.width) {
-    this.velocity.x *= -1;
-  }
-
-  if (this.position.y + this.size.height >= Gemu.World.instance.size.height) {
-    this.velocity.y *= -1;
-  }
-
 }
 
 Gemu.Entity.prototype.setVelocity = function(xVelocity, yVelocity)
@@ -128,7 +139,7 @@ Gemu.Entity.prototype.removeEntity = function(entity)
 
     if (e === entity) {
       e.parentEntity = null;
-      this.subEntities.splice(i, 1);
+      e.deleted = true;
       break;
     }
   }

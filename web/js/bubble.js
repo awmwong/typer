@@ -6,7 +6,7 @@ Typer.Bubble = function (params)
 
   this.word = params.word;
   this.wordPos = 0;
-  
+
   this.subWord = "";
 
   // Compute width
@@ -32,8 +32,8 @@ Typer.Bubble.prototype.draw = function(ctx)
 
   ctx.lineWidth = 1;
   ctx.strokeStyle = "#ACD1E9";
+  ctx.fillStyle = "#ACD1E9";
   ctx.strokeRect(this.drawCoordinates.x, this.drawCoordinates.y, this.size.width, this.size.height);
-  ctx.save();
 
   ctx.font = "normal 32px sans-serif";
   ctx.textAlign = "left";
@@ -51,4 +51,8 @@ Typer.Bubble.prototype.step = function()
 {
   this.wordPos++;
   this.subWord = this.word.substr(0, this.wordPos);
+
+  if (this.wordPos >= this.word.length) {
+    this.eventManager.raiseEvent('bubbleCompleted', this);
+  }
 }

@@ -99,17 +99,30 @@ Typer.PlayScene = function (params)
 
   this.addEntity(this.keyboardEntity);
 
-  this.generateNewBubble();
+  this.generateBubbleDelay = 0;
+  this.lastGeneratedBubbleTime = new Date().getTime();
 }
 
 Typer.PlayScene.prototype = Object.create(Gemu.Scene.prototype);
+
+Typer.PlayScene.prototype.update = function()
+{
+  _super(Gemu.Scene, 'update', this, arguments);
+
+  var elapsed = new Date().getTime() - this.lastGeneratedBubbleTime;
+
+  if (elapsed >= this.generateBubbleDelay) {
+    this.generateNewBubble();
+  }
+}
 
 Typer.PlayScene.prototype.onKeyboardKey = function(key)
 {
   var self = this;
 
   var lowerKey = key.toLowerCase();
-  var matchBubbles = this.bubbleMap[lowerKey];
+
+  var matchBubbles = this.bubbleMap[lowerKey].slice();
 
   if (matchBubbles) {
     matchBubbles.forEach(function(bubble) {
@@ -132,15 +145,20 @@ Typer.PlayScene.prototype.getRandomWord = function()
 Typer.PlayScene.prototype.generateNewBubble = function() 
 {
   var bubble = new Typer.Bubble({
-    position : { x : this.randomInRange(0, 500), y : 25 },
+    position : { x : this.randomInRange(0, 300), y : - 25 },
     word : this.getRandomWord(),
-    velocity : { x : 0, y : 1 }
+    velocity : { x : 0, y : 0.25 }
   })
 
   this.addEntity(bubble);
   this.bindBubble(bubble);
 
   bubble.eventManager.bind('thresholdTouched', this.onBubbleThresholdTouched.bind(this));
+  bubble.eventManager.bind('bubbleCompleted', this.onBubbleCompleted.bind(this));
+
+  this.lastGeneratedBubbleTime = new Date().getTime();
+
+  this.generateBubbleDelay = this.randomInRange(10000, 12000);
 }
 
 Typer.PlayScene.prototype.bindBubble = function(bubble)
@@ -148,11 +166,15 @@ Typer.PlayScene.prototype.bindBubble = function(bubble)
   // HashMap is keyed on character of the bubble word needing to be typed.
   var key = bubble.word[bubble.wordPos];
 
+  if (!key) return;
+
   if (!this.bubbleMap.hasOwnProperty(key)) {
     this.bubbleMap[key] = [];
   }
 
-  this.bubbleMap[key].push(bubble)
+  this.bubbleMap[key].push(bubble);
+
+  console.log("Binded bubble: [" + bubble.word + "] to " + key); 
 }
 
 Typer.PlayScene.prototype.unbindBubble = function(bubble)
@@ -169,6 +191,7 @@ Typer.PlayScene.prototype.unbindBubble = function(bubble)
   for (var i = 0; i < bubbles.length; i++) {
     if (bubbles[i] === bubble) {
       bubbles.splice(i, 1);
+      console.log("Unbinded bubble: [" + bubble.word + "] from " + key); 
       break;
     }
   }
@@ -179,17 +202,55 @@ Typer.PlayScene.prototype.randomInRange = function(min, max)
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+Typer.PlayScene.prototype.randomDoubleInRange = function(min, max)
+{
+  return Math.random() * (max - min + 1) + min;
+}
+
 Typer.PlayScene.prototype.onBubbleThresholdTouched = function(bubble)
 {
   this.removeEntity(bubble);
-  // this.generateNewBubble();
+}
+
+Typer.PlayScene.prototype.onBubbleCompleted = function(bubble)
+{
+  this.explodeBubble(bubble);
+
+  this.removeEntity(bubble);
+}
+
+Typer.PlayScene.prototype.explodeBubble = function(bubble)
+{
+  var self = this;
+
+  var numSquares = self.randomInRange(10, 25);
+
+  for (var i = 0; i < numSquares; i++) {
+    var randomX = self.randomInRange(bubble.position.x, bubble.position.x + bubble.size.width);
+    var randomY = self.randomInRange(bubble.position.y, bubble.position.y + bubble.size.height);
+
+    var particle = new Typer.SquareParticle({
+      position : { x : randomX, y : randomY },
+      velocity: { x : 0, y : bubble.velocity.y },
+      acceleration : { x : 0, y : self.randomDoubleInRange(0.5,2) },
+      collidable : false
+    });
+
+    self.addEntity(particle);
+  }
 }
 
 Typer.PlayScene.prototype.resolveCollisions = function(entity)
 {
   if (entity instanceof Typer.Bubble) {
     if (entity.position.y + entity.size.height >= this.keyboardEntity.position.y) {
-      entity.eventManager.raiseEvent('thresholdTouched');
+      entity.eventManager.raiseEvent('thresholdTouched', entity);
+    }
+  }
+
+  if (entity instanceof Typer.SquareParticle) {
+    if (entity.position.y + entity.size.height + 10 >= this.keyboardEntity.position.y) {
+      this.removeEntity(entity);
     }
   }
 }

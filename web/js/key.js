@@ -4,8 +4,6 @@ Typer.Key = function (params)
 {
   Gemu.Entity.call(this, params);
 
-  this.world = params.world;
-
   this.eventManager.bind('touchstart', this.onTouchStart.bind(this));
   this.eventManager.bind('touchend', this.onTouchEnd.bind(this));
 
@@ -77,6 +75,8 @@ Typer.Key.prototype.onTouchStart = function(event)
 
   // Fire keypress event on keyboard
   keyboard.eventManager.raiseEvent('keypress', this.keyText);
+
+  console.log("Key Pressed: " + this.keyText);
 
   this.selected = true;
 }
