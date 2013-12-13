@@ -3,6 +3,6 @@ body {
 
 #gemu-canvas {
   background: #6D929B;
-  width: 320px;
-  height: 470px;
+  width: 100%;
+  height: 100%;
 }

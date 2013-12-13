@@ -6,7 +6,11 @@ Gemu.Entity = function(params)
     params = {};
   }
 
-  this.world = params.world;
+  if (params.size) {
+    this.size = params.size;
+  } else {
+    this.size = { width : 0, height : 0};
+  }
 
   if (params.position) {
     this.position = params.position;
@@ -15,12 +19,6 @@ Gemu.Entity = function(params)
       x : 0,
       y : 0
     };
-  }
-
-
-  this.size = {
-    width : 0,
-    height : 0
   }
 
   if (params.velocity) {
@@ -104,6 +102,10 @@ Gemu.Entity.prototype.doesContainPoint = function(xCoord, yCoord)
 {
   var containsX;
 
+  if (!this.drawCoordinates) {
+    return;
+  }
+  
   if (xCoord >= this.drawCoordinates.x && xCoord <= this.drawCoordinates.x + this.size.width) {
     containsX = true;
   }

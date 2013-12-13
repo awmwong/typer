@@ -10,7 +10,10 @@ Typer.Keyboard = function(params)
       'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L',
       'Z', 'X', 'C', 'V', 'B', 'N', 'M'];
 
-  this.position = params.position;
+  this.position = {
+    x : 0,
+    y : Gemu.World.instance.size.height - this.size.height
+  }
 
   this.setupKeyboard();
 

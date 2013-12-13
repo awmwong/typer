@@ -52,13 +52,12 @@ Gemu.Scene.prototype.render = function(ctx)
 
 Gemu.Scene.prototype.handleEvent = function(event)
 {
-  // console.log(event);
-  var x = event.changedTouches[0].clientX;
-  var y = event.changedTouches[0].clientY;
+  var x = event.changedTouches[0].pageX;
+  var y = event.changedTouches[0].pageY;
 
-  var scaledX = x * 2;
-  var scaledY = y * 2;
-
+  var scaledX = x / window.innerWidth * Gemu.World.instance.gameWindow.width;
+  var scaledY = y / window.innerHeight * Gemu.World.instance.gameWindow.height;
+  
   var entitiesCopy = this.entities.slice();
 
   entitiesCopy.forEach(function(entity) {

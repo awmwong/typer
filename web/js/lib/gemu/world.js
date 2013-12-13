@@ -25,6 +25,20 @@ Gemu.World = function(params)
     this.context = this.gameWindow.getContext("2d");
   }
 
+  var neededWidth = 640;
+  var neededHeight = 960;
+
+  var aspectRatio = neededWidth / neededHeight;
+
+  this.gameWindow.width = neededWidth;
+  this.gameWindow.height = (window.innerHeight / window.innerWidth) * this.gameWindow.width;
+
+  if (this.gameWindow.width / this.gameWindow.height > aspectRatio) {
+      var previousAspectRatio = this.gameWindow.width / this.gameWindow.height;
+      this.gameWindow.height = neededHeight;
+      this.gameWindow.width = this.gameWindow.height * previousAspectRatio;
+  }
+
   // Touch Events
   this.gameWindow.addEventListener("touchstart", this.processInput.bind(this));
   this.gameWindow.addEventListener("touchend", this.processInput.bind(this));
@@ -40,7 +54,7 @@ Gemu.World = function(params)
   Gemu.World.instance = this;
 }
 
-Gemu.World.tickRate = 1000 / 60;
+Gemu.World.tickRate = 1000 / 120;
 
 Gemu.World.prototype.run = function()
 {
@@ -80,7 +94,10 @@ Gemu.World.prototype.loop = function()
   self.framerateTimeAccumulator += elapsed;
   self.framerateFramesAccumulator++;
   if (self.framerateTimeAccumulator >= 1000) {
-    console.log("framerate: " + self.framerateFramesAccumulator);
+    // console.log("framerate: " + self.framerateFramesAccumulator);
+    // console.log("devicePixelRatio: " + self.devicePixelRatio);
+    // console.log("backingStoreRatio: " + self.backingStoreRatio);
+
     self.framerateTimeAccumulator = 0;
     self.framerateFramesAccumulator = 0;
   }

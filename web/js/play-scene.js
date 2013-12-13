@@ -85,13 +85,8 @@ Typer.PlayScene = function (params)
   ]
 
   this.keyboardEntity = new Typer.Keyboard({
-    "position": { x : 0, y : 624}
+    size : { width : 640, height : 316}
   });
-
-  this.keyboardEntity.size = {
-    width: 640,
-    height: 315
-  }
 
   this.keyboardEntity.eventManager.bind('keypress', this.onKeyboardKey.bind(this));
 
@@ -148,11 +143,19 @@ Typer.PlayScene.prototype.cleanupBoxes = function(boxes)
   return tempEnt;
 }
 
-Typer.PlayScene.prototype.onKeyboardKey = function(key)
+Typer.PlayScene.prototype.onKeyboardKey = function(keyEntity)
 {
   var self = this;
 
-  var lowerKey = key.toLowerCase();
+  // Preview Key
+  var previewEntity = new Typer.Key({"keyText" : keyEntity.keyText});
+  previewEntity.setPosition(keyEntity.drawCoordinates.x, this.keyboardEntity.position.y);
+  previewEntity.velocity = { x : 0, y : - 5};
+
+  setTimeout( function(){ self.removeEntity(previewEntity)}, 300)
+  self.addEntity(previewEntity);
+
+  var lowerKey = keyEntity.keyText.toLowerCase();
 
   if (!this.bubbleMap[lowerKey]) {
     return;
@@ -316,7 +319,7 @@ Typer.PlayScene.prototype.explodeBubble = function(bubble)
     var particle = new Typer.BoxSprite({
       position : { x : randomX, y : randomY },
       velocity: { x : 0, y : bubble.velocity.y },
-      acceleration : { x : 0, y : self.randomDoubleInRange(0.5,2) },
+      acceleration : { x : 0, y : self.randomDoubleInRange(0.25, 1) },
     });
 
     self.addEntity(particle);
