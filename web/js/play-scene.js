@@ -158,7 +158,7 @@ Typer.PlayScene.prototype.generateNewBubble = function()
 
   this.lastGeneratedBubbleTime = new Date().getTime();
 
-  this.generateBubbleDelay = this.randomInRange(10000, 12000);
+  this.generateBubbleDelay = this.randomInRange(5000, 10000);
 }
 
 Typer.PlayScene.prototype.bindBubble = function(bubble)
