@@ -147,7 +147,7 @@ Typer.PlayScene.prototype.generateNewBubble = function()
   var bubble = new Typer.Bubble({
     position : { x : this.randomInRange(0, 300), y : - 25 },
     word : this.getRandomWord(),
-    velocity : { x : 0, y : 0.5 }
+    velocity : { x : 0, y : 1.0 }
   })
 
   this.addEntity(bubble);
@@ -158,7 +158,7 @@ Typer.PlayScene.prototype.generateNewBubble = function()
 
   this.lastGeneratedBubbleTime = new Date().getTime();
 
-  this.generateBubbleDelay = this.randomInRange(3000, 7000);
+  this.generateBubbleDelay = this.randomInRange(2000, 7000);
 }
 
 Typer.PlayScene.prototype.bindBubble = function(bubble)
