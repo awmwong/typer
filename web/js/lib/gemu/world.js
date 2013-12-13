@@ -57,6 +57,8 @@ Gemu.World.prototype.run = function()
 Gemu.World.prototype.loop = function()
 {
   var self = this;
+  requestAnimFrame(this.loop.bind(this));
+
 
   var currentTime = new Date().getTime();
 
@@ -78,7 +80,7 @@ Gemu.World.prototype.loop = function()
   self.framerateTimeAccumulator += elapsed;
   self.framerateFramesAccumulator++;
   if (self.framerateTimeAccumulator >= 1000) {
-    // console.log("framerate: " + self.framerateFramesAccumulator);
+    console.log("framerate: " + self.framerateFramesAccumulator);
     self.framerateTimeAccumulator = 0;
     self.framerateFramesAccumulator = 0;
   }
@@ -93,7 +95,6 @@ Gemu.World.prototype.loop = function()
   // Render
   self.render();
 
-  requestAnimFrame(function() { self.loop.call(self) });
 }
 
 Gemu.World.prototype.processInput = function(event)

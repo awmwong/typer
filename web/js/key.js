@@ -76,7 +76,7 @@ Typer.Key.prototype.onTouchStart = function(event)
   // Fire keypress event on keyboard
   keyboard.eventManager.raiseEvent('keypress', this.keyText);
 
-  console.log("Key Pressed: " + this.keyText);
+  // console.log("Key Pressed: " + this.keyText);
 
   this.selected = true;
 }

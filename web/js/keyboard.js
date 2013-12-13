@@ -80,6 +80,9 @@ Typer.Keyboard.prototype.setupKeyboard = function()
 
 Typer.Keyboard.prototype.draw = function(ctx)
 {
+  ctx.fillStyle = "#6D929B"
+  ctx.fillRect(this.drawCoordinates.x, this.drawCoordinates.y, this.size.width, this.size.height);
+
   ctx.strokeStyle = "#ACD1E9";
   ctx.lineWidth  = 1;
   ctx.beginPath();
@@ -87,8 +90,6 @@ Typer.Keyboard.prototype.draw = function(ctx)
   ctx.lineTo(this.drawCoordinates.x + this.size.width, this.drawCoordinates.y);
   ctx.stroke();
   ctx.closePath();
-
-  // ctx.fillRect(this.drawCoordinates.x, this.drawCoordinates.y, this.size.width, this.size.height);
 }
 
 Typer.Keyboard.prototype.onTouchMove = function(event)

@@ -20,6 +20,7 @@ Gemu.Scene.prototype.removeEntity = function(entity)
 
     if (entity === e) {
       e.deleted = true;
+      e.eventManager.unbindAll();
       break;
     }
   }
