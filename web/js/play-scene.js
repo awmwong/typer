@@ -183,12 +183,16 @@ Typer.PlayScene.prototype.generateNewBubble = function()
   var randInt = this.randomInRange(0, 100);
 
   var bubble;
-  if (randInt <= 50) {
+  if (randInt <= 80) {
     bubble = this.generateNormalBubble();
-  } else if (randInt <= 75) {
+  } else if (randInt <= 95) {
     bubble = this.generateIceBubble();
   } else if (randInt <= 100) {
     bubble = this.generateBombBubble();
+  }
+
+  if (bubble.position.x + bubble.size.width >= Gemu.World.instance.size.width) {
+    bubble.position.x = Gemu.World.instance.size.width - bubble.size.width;
   }
 
   this.addEntity(bubble);
@@ -198,7 +202,7 @@ Typer.PlayScene.prototype.generateNewBubble = function()
   bubble.eventManager.bind('bubbleCompleted', this.onBubbleCompleted.bind(this));
 
   this.lastGeneratedBubbleTime = new Date().getTime();
-  this.generateBubbleDelay = this.randomInRange(2000, 5000);
+  this.generateBubbleDelay = this.randomInRange(1000, 3500);
 }
 
 Typer.PlayScene.prototype.generateNormalBubble = function()
@@ -217,7 +221,7 @@ Typer.PlayScene.prototype.generateIceBubble = function()
   var bubble = new Typer.IceBubble({
     position : { x : this.randomInRange(0, 500), y : - 25 },
     word : this.getRandomWord(),
-    velocity : { x : 0, y : 0.5 }
+    velocity : { x : 0, y : 1 }
   });
 
   bubble.eventManager.bind('bubbleCompleted', function(){
@@ -234,7 +238,7 @@ Typer.PlayScene.prototype.generateBombBubble = function()
   var bubble = new Typer.BombBubble({
     position : { x : this.randomInRange(0, 500), y : - 25 },
     word : this.getRandomWord(),
-    velocity : { x : 0, y : 0.5 }
+    velocity : { x : 0, y : 1}
   });
 
   bubble.eventManager.bind('bubbleCompleted', function(){
@@ -366,6 +370,14 @@ Typer.PlayScene.prototype.resolveCollisions = function(entity)
     iceBoxes.some(function(iceBox){
       if (self.doEntitiesOverlap(iceBox, entity)) {
         entity.velocity = { x : 0, y : 0};
+
+        setTimeout(function(){
+          if (!entity) {
+            return;
+          }
+
+          entity.velocity = { x : 0, y : 1.5};
+        }, 5000)
         return;
       }
     });
