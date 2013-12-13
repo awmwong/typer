@@ -24,7 +24,7 @@ Typer.Keyboard.prototype.setupKeyboard = function()
 {
   var self = this;
 
-  var startX = this.position.x + 6;
+  var startX = this.position.x + 2;
   var startY = this.position.y + 24;
 
   // Setup the first row
@@ -38,7 +38,7 @@ Typer.Keyboard.prototype.setupKeyboard = function()
     self.addEntity(keyEntity);
 
     startX += keyEntity.size.width;
-    startX += 12;
+    startX += 4;
   }
 
   // Setup the second row
@@ -55,7 +55,7 @@ Typer.Keyboard.prototype.setupKeyboard = function()
     self.addEntity(keyEntity);
 
     startX += keyEntity.size.width;
-    startX += 12;
+    startX += 4;
   }
 
   // Setup the third row;
@@ -72,7 +72,7 @@ Typer.Keyboard.prototype.setupKeyboard = function()
     self.addEntity(keyEntity);
 
     startX += keyEntity.size.width;
-    startX += 12;
+    startX += 4;
   }
 
   console.log(startY);
@@ -87,6 +87,8 @@ Typer.Keyboard.prototype.draw = function(ctx)
   ctx.lineTo(this.drawCoordinates.x + this.size.width, this.drawCoordinates.y);
   ctx.stroke();
   ctx.closePath();
+
+  // ctx.fillRect(this.drawCoordinates.x, this.drawCoordinates.y, this.size.width, this.size.height);
 }
 
 Typer.Keyboard.prototype.onTouchMove = function(event)

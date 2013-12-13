@@ -94,7 +94,6 @@ Gemu.World.prototype.loop = function()
   self.render();
 
   requestAnimFrame(function() { self.loop.call(self) });
-
 }
 
 Gemu.World.prototype.processInput = function(event)

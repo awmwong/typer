@@ -24,3 +24,15 @@ Gemu.EventManager.prototype.raiseEvent = function(type, event)
   }
 }
 
+Gemu.EventManager.prototype.unbind = function(type)
+{
+  this.bindings[type] = [];
+}
+
+Gemu.EventManager.prototype.unbindAll = function()
+{
+  var self = this;
+  Object.keys(this.bindings).forEach(function (key){
+    self.bindings[key] = [];
+  });
+}

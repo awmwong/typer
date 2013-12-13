@@ -85,7 +85,7 @@ Typer.PlayScene = function (params)
   ]
 
   this.keyboardEntity = new Typer.Keyboard({
-    "position": { x : 0, y : 620}
+    "position": { x : 0, y : 624}
   });
 
   this.keyboardEntity.size = {
@@ -179,13 +179,7 @@ Typer.PlayScene.prototype.bindBubble = function(bubble)
 
 Typer.PlayScene.prototype.unbindBubble = function(bubble)
 {
-  // You can only ever unbind if you are at least wordPos = 1, since 
-  // we look at wordPos - 1's position to unbind.
-  if (bubble.wordPos == 0) {
-    return;
-  }
-
-  var key = bubble.word[bubble.wordPos - 1];
+  var key = bubble.word[Math.max(0,bubble.wordPos - 1)  ];
   var bubbles = this.bubbleMap[key];
 
   for (var i = 0; i < bubbles.length; i++) {
@@ -209,14 +203,17 @@ Typer.PlayScene.prototype.randomDoubleInRange = function(min, max)
 
 Typer.PlayScene.prototype.onBubbleThresholdTouched = function(bubble)
 {
+  this.unbindBubble(bubble);
   this.removeEntity(bubble);
+  bubble.eventManager.unbindAll();
 }
 
 Typer.PlayScene.prototype.onBubbleCompleted = function(bubble)
 {
   this.explodeBubble(bubble);
-
+  this.unbindBubble(bubble);
   this.removeEntity(bubble);
+  bubble.eventManager.unbindAll();
 }
 
 Typer.PlayScene.prototype.explodeBubble = function(bubble)

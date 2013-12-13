@@ -10,7 +10,7 @@ Typer.Key = function (params)
   this.keyText = params.keyText;
 
   this.size = {
-    width: 52,
+    width: 60,
     height: 78
   }
 
