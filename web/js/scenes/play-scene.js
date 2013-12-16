@@ -2,7 +2,7 @@ var Typer = Typer || {};
 
 Typer.PlayScene = function (params)
 {
-  Gemu.Scene.call(this);
+  Gemu.Scene.call(this, params);
 
   this.wordList = [
     "cultish", "parade", "crucifix", "bachelor", "rib", "edge", "dimensional", "bell", "junior", "bench",
@@ -115,6 +115,7 @@ Typer.PlayScene.prototype.reset = function()
   this.bombBoxes = [];
 
   this.score = 0;
+  this.bubbleCounter = 0;
 
   this.maxHP = 25;
   this.curHP = this.maxHP;
@@ -130,9 +131,8 @@ Typer.PlayScene.prototype.render = function(ctx)
 
   // Draw HP bar
   var hpPercentage = this.curHP / this.maxHP;
-
-  ctx.fillStyle = "#F5FAFA"
-  ctx.fillRect(0, 0, hpPercentage * Gemu.World.instance.gameWindow.width, 48);
+  ctx.fillStyle = "#B7AFA3"
+  ctx.fillRect(0, this.keyboardEntity.position.y - 1, hpPercentage * Gemu.World.instance.gameWindow.width, 1);
 
   // Draw score
   var scoreString = this.score.toString();
@@ -141,8 +141,8 @@ Typer.PlayScene.prototype.render = function(ctx)
   ctx.font = "normal 32px sans-serif";
   ctx.textAlign = "middle";
   ctx.textBaseline = "middle"
-  ctx.strokeStyle = "#E8D0A9"
-  ctx.fillStyle = "#E8D0A9"
+  ctx.strokeStyle = "#B7AFA3"
+  ctx.fillStyle = "#B7AFA3"
   ctx.fillText(scoreString, Gemu.World.instance.gameWindow.width / 2, 24);
 
 
@@ -278,7 +278,7 @@ Typer.PlayScene.prototype.generateNormalBubble = function()
   return new Typer.Bubble({
    position : { x : this.randomInRange(0, 500), y : - 25 },
    word : this.getRandomWord(),
-   velocity : { x : 0, y : 0.5 }
+   velocity : { x : 0, y : this.getBubbleSpeed(0.5) }
  })
 }
 
@@ -289,7 +289,7 @@ Typer.PlayScene.prototype.generateIceBubble = function()
   var bubble = new Typer.IceBubble({
     position : { x : this.randomInRange(0, 500), y : - 25 },
     word : this.getRandomWord(),
-    velocity : { x : 0, y : 1 }
+    velocity : { x : 0, y : this.getBubbleSpeed(1.0) }
   });
 
   bubble.eventManager.bind('bubbleCompleted', function(){
@@ -306,7 +306,7 @@ Typer.PlayScene.prototype.generateBombBubble = function()
   var bubble = new Typer.BombBubble({
     position : { x : this.randomInRange(0, 500), y : - 25 },
     word : this.getRandomWord(),
-    velocity : { x : 0, y : 1}
+    velocity : { x : 0, y : this.getBubbleSpeed(1.0) }
   });
 
   bubble.eventManager.bind('bubbleCompleted', function(){
@@ -387,6 +387,8 @@ Typer.PlayScene.prototype.onBubbleCompleted = function(bubble)
   this.explodeBubble(bubble);
   this.unbindBubble(bubble);
   this.removeEntity(bubble);
+
+  this.bubbleCounter++;
 }
 
 Typer.PlayScene.prototype.reduceHP = function(bubble)
@@ -515,7 +517,8 @@ Typer.PlayScene.prototype.resolveCollisions = function(entity)
   }
 }
 
-Typer.PlayScene.prototype.doEntitiesOverlap = function(a, b) {
+Typer.PlayScene.prototype.doEntitiesOverlap = function(a, b)
+{
   var ax1 = a.position.x;
   var ax2 = a.position.x + a.size.width;
   var ay1 = a.position.y;
@@ -528,4 +531,10 @@ Typer.PlayScene.prototype.doEntitiesOverlap = function(a, b) {
 
   return (ax1 < bx2 && ax2 > bx1 &&
       ay1 < by2 && ay2 > by1);
+}
+
+Typer.PlayScene.prototype.getBubbleSpeed = function(baseSpeed)
+{
+  var incrementAmount = this.bubbleCounter / 100;
+  return Math.min(2.0, baseSpeed + incrementAmount)
 }

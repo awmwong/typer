@@ -9,11 +9,14 @@
   
   var world = new Gemu.World();
 
-  var playScene = new Typer.PlayScene();
+  var playScene = new Typer.PlayScene({name : 'playScene'});
 
+  var menuScene = new Typer.MenuScene({name : 'menuScene'});
 
   world.addScene(playScene);
-  world.activateScene(playScene);
+  world.addScene(menuScene);
+
+  world.activateScene(menuScene);
   world.run();
 
 })(App);

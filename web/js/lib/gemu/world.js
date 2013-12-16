@@ -159,6 +159,19 @@ Gemu.World.prototype.activateScene = function(scene)
   });
 }
 
+Gemu.World.prototype.activateSceneByName = function(name)
+{
+  var self = this;
+
+  self.scenes.forEach(function(s) {
+    if (s.name === name) {
+      s.active = true;
+    } else {
+      s.active = false;
+    }
+  });
+}
+
 Gemu.World.prototype.getActiveScene = function()
 {
   var self = this;

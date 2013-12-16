@@ -2,10 +2,15 @@ var Gemu = Gemu || {};
 
 Gemu.Scene = function(params)
 {
+  if (!params) {
+    params = {};
+  }
+
   this.entities = [];
 
   this.active = false;
 
+  this.name = params.name;
 }
 
 Gemu.Scene.prototype.addEntity = function(entity)
@@ -63,7 +68,9 @@ Gemu.Scene.prototype.handleEvent = function(event)
   entitiesCopy.forEach(function(entity) {
     if (entity.doesContainPoint(scaledX, scaledY)) {
       entity.eventManager.raiseEvent(event.type, event);
-    } 
+    } else {
+      entity.eventManager.raiseEvent('touchout', event);
+    }
   });
 }
 

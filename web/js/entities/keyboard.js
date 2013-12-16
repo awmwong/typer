@@ -102,13 +102,13 @@ Typer.Keyboard.prototype.draw = function(ctx)
   ctx.fillStyle = "#6D929B"
   ctx.fillRect(this.drawCoordinates.x, this.drawCoordinates.y, this.size.width, this.size.height);
 
-  ctx.strokeStyle = "#ACD1E9";
-  ctx.lineWidth  = 1;
-  ctx.beginPath();
-  ctx.moveTo(this.drawCoordinates.x, this.drawCoordinates.y);
-  ctx.lineTo(this.drawCoordinates.x + this.size.width, this.drawCoordinates.y);
-  ctx.stroke();
-  ctx.closePath();
+  // ctx.strokeStyle = "#ACD1E9";
+  // ctx.lineWidth  = 1;
+  // ctx.beginPath();
+  // ctx.moveTo(this.drawCoordinates.x, this.drawCoordinates.y);
+  // ctx.lineTo(this.drawCoordinates.x + this.size.width, this.drawCoordinates.y);
+  // ctx.stroke();
+  // ctx.closePath();
 }
 
 Typer.Keyboard.prototype.onTouchMove = function(event)
