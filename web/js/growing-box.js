@@ -10,6 +10,12 @@ Typer.GrowingBox = function (params)
     this.strokeStyle = "#ACD139";
   }
 
+  if (params.bubbleColor) {
+    this.bubbleColor = params.bubbleColor;
+  } else {
+    this.bubbleColor = "#ACD139"
+  }
+
   this.growthAmount = 24;
 }
 

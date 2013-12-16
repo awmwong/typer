@@ -101,6 +101,8 @@ Typer.PlayScene.prototype.reset = function()
 {  
   this.bubbleMap = {};
   this.entities = [];
+  this.addEntity(this.keyboardEntity);
+
 
 
   this.generateBubbleDelay = 0;
@@ -226,8 +228,10 @@ Typer.PlayScene.prototype.generateNewBubble = function()
   var bubble;
   if (randInt <= 80) {
     bubble = this.generateNormalBubble();
-  } else if (randInt <= 95) {
+  } else if (randInt <= 90) {
     bubble = this.generateIceBubble();
+  } else if (randInt <= 95) {
+    bubble = this.generateLifeBubble();
   } else if (randInt <= 100) {
     bubble = this.generateBombBubble();
   }
@@ -291,7 +295,19 @@ Typer.PlayScene.prototype.generateBombBubble = function()
 
 Typer.PlayScene.prototype.generateLifeBubble = function()
 {
+  var self = this;
 
+  var bubble = new Typer.LifeBubble({
+    position : { x : this.randomInRange(0, 500), y : - 25 },
+    word : this.getRandomWord(),
+    velocity : { x : 0, y : 1}
+  });  
+
+  bubble.eventManager.bind('bubbleCompleted', function(){
+    self.curHP = Math.min(self.curHP + bubble.word.length, self.maxHP);
+  });
+
+  return bubble;
 }
 
 Typer.PlayScene.prototype.bindBubble = function(bubble)
@@ -381,6 +397,7 @@ Typer.PlayScene.prototype.explodeBubble = function(bubble)
       position : { x : randomX, y : randomY },
       velocity: { x : 0, y : bubble.velocity.y },
       acceleration : { x : 0, y : self.randomDoubleInRange(0.25, 1) },
+      backgroundColor : bubble.bubbleColor
     });
 
     self.addEntity(particle);

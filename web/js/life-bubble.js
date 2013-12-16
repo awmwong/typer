@@ -1,21 +1,20 @@
 var Typer = Typer || {};
 
-Typer.IceBubble = function (params)
+Typer.LifeBubble = function (params)
 {
   Typer.Bubble.call(this, params);
 
-  this.strokeStyle = "#F5FAFA";
-  this.bubbleColor = "#F5FAFA"
+  this.bubbleColor = "#7db37d";
 }
 
-Typer.IceBubble.prototype = Object.create(Typer.Bubble.prototype);
+Typer.LifeBubble.prototype = Object.create(Typer.Bubble.prototype);
 
-Typer.IceBubble.prototype.draw = function(ctx)
+Typer.LifeBubble.prototype.draw = function(ctx)
 {
   _super(Typer.Bubble, 'draw', this, arguments);
 
   ctx.lineWidth = 1;
-  ctx.strokeStyle = this.strokeStyle;
+  ctx.strokeStyle = this.bubbleColor;
   ctx.fillStyle = this.bubbleColor;
   ctx.fillRect(this.drawCoordinates.x, this.drawCoordinates.y, this.size.width, this.size.height);
 

@@ -3,6 +3,9 @@ var Typer = Typer || {};
 Typer.BombBubble = function (params)
 {
   Typer.Bubble.call(this, params);
+
+  this.strokeStyle = "#B7AFA3";
+  this.bubbleColor = "#B7AFA3";
 }
 
 Typer.BombBubble.prototype = Object.create(Typer.Bubble.prototype);
@@ -12,8 +15,8 @@ Typer.BombBubble.prototype.draw = function(ctx)
   _super(Typer.Bubble, 'draw', this, arguments);
 
   ctx.lineWidth = 1;
-  ctx.strokeStyle = "#B7AFA3";
-  ctx.fillStyle = "#B7AFA3";
+  ctx.strokeStyle = this.strokeStyle;
+  ctx.fillStyle = this.bubbleColor;
   ctx.fillRect(this.drawCoordinates.x, this.drawCoordinates.y, this.size.width, this.size.height);
 
   ctx.font = "normal 32px sans-serif";

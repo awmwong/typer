@@ -22,6 +22,8 @@ Typer.Bubble = function (params)
     height : 48
   };
 
+  this.strokeStyle = "#ACD139";
+  this.bubbleColor = "#6D929B";
 }
 
 Typer.Bubble.prototype = Object.create(Gemu.Entity.prototype);

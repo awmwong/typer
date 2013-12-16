@@ -14,6 +14,12 @@ Typer.BoxSprite = function (params)
   } else {
     this.strokeStyle = "#ACD1E9";
   }
+
+  if (params.backgroundColor) {
+    this.backgroundColor = params.backgroundColor;
+  } else {
+    this.backgroundColor = "#6D929B"
+  }
 }
 
 Typer.BoxSprite.prototype = Object.create(Gemu.Entity.prototype);
@@ -24,5 +30,8 @@ Typer.BoxSprite.prototype.draw = function(ctx)
 
   ctx.lineWidth = 1;
   ctx.strokeStyle = this.strokeStyle;
-  ctx.strokeRect(this.drawCoordinates.x, this.drawCoordinates.y, this.size.width, this.size.height);  
+  ctx.fillStyle = this.backgroundColor;
+  ctx.strokeRect(this.drawCoordinates.x, this.drawCoordinates.y, this.size.width, this.size.height);
+  ctx.fillRect(this.drawCoordinates.x, this.drawCoordinates.y, this.size.width, this.size.height);  
+
 }
