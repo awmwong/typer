@@ -89,10 +89,19 @@ Typer.PlayScene = function (params)
   });
 
   this.keyboardEntity.eventManager.bind('keypress', this.onKeyboardKey.bind(this));
-
-  this.bubbleMap = {};
-
   this.addEntity(this.keyboardEntity);
+
+  this.reset();
+
+}
+
+Typer.PlayScene.prototype = Object.create(Gemu.Scene.prototype);
+
+Typer.PlayScene.prototype.reset = function()
+{  
+  this.bubbleMap = {};
+  this.entities = [];
+
 
   this.generateBubbleDelay = 0;
   this.lastGeneratedBubbleTime = new Date().getTime();
@@ -102,9 +111,13 @@ Typer.PlayScene = function (params)
 
   // Bomb Boxes
   this.bombBoxes = [];
-}
 
-Typer.PlayScene.prototype = Object.create(Gemu.Scene.prototype);
+  this.score = 0;
+
+  this.maxHP = 25;
+  this.curHP = this.maxHP;
+
+}
 
 Typer.PlayScene.prototype.render = function(ctx)
 {
@@ -112,11 +125,34 @@ Typer.PlayScene.prototype.render = function(ctx)
 
   // HACK to make sure keyboard is ontop of everything.
   this.keyboardEntity.render(ctx);
+
+  // Draw HP bar
+  var hpPercentage = this.curHP / this.maxHP;
+
+  ctx.fillStyle = "#F5FAFA"
+  ctx.fillRect(0, 0, hpPercentage * Gemu.World.instance.gameWindow.width, 48);
+
+  // Draw score
+  var scoreString = this.score.toString();
+  var scoreWidth = ctx.measureText(scoreString).width;
+
+  ctx.font = "normal 32px sans-serif";
+  ctx.textAlign = "middle";
+  ctx.textBaseline = "middle"
+  ctx.strokeStyle = "#E8D0A9"
+  ctx.fillStyle = "#E8D0A9"
+  ctx.fillText(scoreString, Gemu.World.instance.gameWindow.width / 2, 24);
+
+
 }
 
 Typer.PlayScene.prototype.update = function()
 {
   _super(Gemu.Scene, 'update', this, arguments);
+
+  if (this.curHP === 0) {
+    this.reset();
+  }
 
   this.iceBoxes = this.cleanupBoxes(this.iceBoxes.slice());
   this.bombBoxes = this.cleanupBoxes(this.bombBoxes.slice());
@@ -126,6 +162,8 @@ Typer.PlayScene.prototype.update = function()
   if (elapsed >= this.generateBubbleDelay) {
     this.generateNewBubble();
   }
+
+
 }
 
 Typer.PlayScene.prototype.cleanupBoxes = function(boxes)
@@ -295,15 +333,38 @@ Typer.PlayScene.prototype.randomDoubleInRange = function(min, max)
 
 Typer.PlayScene.prototype.onBubbleThresholdTouched = function(bubble)
 {
+  this.reduceHP(bubble)
   this.unbindBubble(bubble);
   this.removeEntity(bubble);
 }
 
 Typer.PlayScene.prototype.onBubbleCompleted = function(bubble)
 {
+  this.scoreBubble(bubble);
   this.explodeBubble(bubble);
   this.unbindBubble(bubble);
   this.removeEntity(bubble);
+}
+
+Typer.PlayScene.prototype.reduceHP = function(bubble)
+{
+  var numMissingLetters = bubble.word.length - bubble.wordPos;
+
+  this.curHP -= numMissingLetters;
+
+  if (this.curHP < 0) {
+    this.curHP = 0;
+  }
+}
+
+Typer.PlayScene.prototype.scoreBubble = function(bubble)
+{
+  var wordLength = bubble.word.length;
+  var distanceFromTop = Gemu.World.instance.gameWindow.height - bubble.position.y;
+
+  var score = (wordLength * (distanceFromTop * distanceFromTop)) / 10000.0;
+
+  this.score += Math.floor(score);
 }
 
 Typer.PlayScene.prototype.explodeBubble = function(bubble)
