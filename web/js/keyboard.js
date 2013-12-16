@@ -45,7 +45,7 @@ Typer.Keyboard.prototype.setupKeyboard = function()
   }
 
   // Setup the second row
-  startX = 38;
+  startX = 34;
   startY += 78 + 15;
 
   for (var i = 10; i <= 18; i++) {
@@ -57,12 +57,28 @@ Typer.Keyboard.prototype.setupKeyboard = function()
 
     self.addEntity(keyEntity);
 
+    // HACK for A & L hit zones.
+    if (key === 'A') {
+      this.AKeyEntity = keyEntity;
+      console.log('A startX: ' + startX);
+      console.log('A startY: ' + startY);
+    }
+
+    if (key === 'L') {
+      this.LKeyEntity = keyEntity;
+      console.log('A startX: ' + startX);
+      console.log('A startY: ' + startY);
+    }
+
     startX += keyEntity.size.width;
     startX += 4;
+
+
+
   }
 
   // Setup the third row;
-  startX = 102;
+  startX = 98;
   startY += 78 + 15;
 
   for (var i = 19; i <= 25; i++) {

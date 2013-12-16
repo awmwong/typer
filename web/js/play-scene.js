@@ -168,6 +168,27 @@ Typer.PlayScene.prototype.update = function()
 
 }
 
+Typer.PlayScene.prototype.handleEvent = function(event)
+{
+  _super(Gemu.Scene, 'handleEvent', this, arguments);
+
+  var x = event.changedTouches[0].pageX;
+  var y = event.changedTouches[0].pageY;
+
+  var canvasX = x / window.innerWidth * Gemu.World.instance.gameWindow.width;
+  var canvasY = y / window.innerHeight * Gemu.World.instance.gameWindow.height;
+
+  // A-Key HITBOX HACK
+  if (canvasX > 0 && canvasX < 34 && canvasY >= 953 && canvasY <= 1031) {
+    this.keyboardEntity.AKeyEntity.eventManager.raiseEvent(event.type, event);
+  }
+
+  // L-Key HITBOX HACK
+  if (canvasX > 606 && canvasY >= 953 && canvasY <= 1031) {
+    this.keyboardEntity.LKeyEntity.eventManager.raiseEvent(event.type, event);
+  }
+}
+
 Typer.PlayScene.prototype.cleanupBoxes = function(boxes)
 {
   var tempEnt = [];
@@ -239,6 +260,8 @@ Typer.PlayScene.prototype.generateNewBubble = function()
   if (bubble.position.x + bubble.size.width >= Gemu.World.instance.size.width) {
     bubble.position.x = Gemu.World.instance.size.width - bubble.size.width;
   }
+
+  bubble.position.x = Math.max(bubble.position.x, 32)
 
   this.addEntity(bubble);
   this.bindBubble(bubble);
