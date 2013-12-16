@@ -23,7 +23,7 @@ Typer.GrowingBox.prototype = Object.create(Typer.BoxSprite.prototype);
 
 Typer.GrowingBox.prototype.update = function()
 {
-  _super(Typer.Bubble, 'update', this, arguments);
+  _super(Typer.BoxSprite, 'update', this, arguments);
 
   this.size.width += this.growthAmount;
   this.size.height += this.growthAmount;
@@ -37,4 +37,12 @@ Typer.GrowingBox.prototype.update = function()
 
   this.position.x = Math.max(0, this.position.x);
   this.position.y = Math.max(0, this.position.y);
+}
+
+Typer.GrowingBox.prototype.draw = function(ctx)
+{
+  ctx.lineWidth = 1;
+  ctx.strokeStyle = this.strokeStyle;
+  ctx.fillStyle = this.backgroundColor;
+  ctx.strokeRect(this.drawCoordinates.x, this.drawCoordinates.y, this.size.width, this.size.height);
 }

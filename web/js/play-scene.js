@@ -372,7 +372,11 @@ Typer.PlayScene.prototype.randomDoubleInRange = function(min, max)
 
 Typer.PlayScene.prototype.onBubbleThresholdTouched = function(bubble)
 {
-  this.reduceHP(bubble)
+
+  if (!(bubble instanceof Typer.IceBubble || bubble instanceof Typer.LifeBubble || bubble instanceof Typer.BombBubble)) {
+    this.reduceHP(bubble)
+  }
+
   this.unbindBubble(bubble);
   this.removeEntity(bubble);
 }
