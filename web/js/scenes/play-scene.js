@@ -4,6 +4,8 @@ Typer.PlayScene = function (params)
 {
   Gemu.Scene.call(this, params);
 
+  this.name = "playScene";
+
   this.wordList = [
     "cultish", "parade", "crucifix", "bachelor", "rib", "edge", "dimensional", "bell", "junior", "bench",
     "fetish", "rastling", "soul", "wrong", "association", "loophole", "salt", "sentinel", "danger", "behavior",
@@ -144,8 +146,6 @@ Typer.PlayScene.prototype.render = function(ctx)
   ctx.strokeStyle = "#B7AFA3"
   ctx.fillStyle = "#B7AFA3"
   ctx.fillText(scoreString, Gemu.World.instance.gameWindow.width / 2, 24);
-
-
 }
 
 Typer.PlayScene.prototype.update = function()
@@ -153,6 +153,7 @@ Typer.PlayScene.prototype.update = function()
   _super(Gemu.Scene, 'update', this, arguments);
 
   if (this.curHP === 0) {
+    Gemu.World.instance.activateSceneByName('endScene', { score : this.score });
     this.reset();
   }
 
@@ -270,7 +271,7 @@ Typer.PlayScene.prototype.generateNewBubble = function()
   bubble.eventManager.bind('bubbleCompleted', this.onBubbleCompleted.bind(this));
 
   this.lastGeneratedBubbleTime = new Date().getTime();
-  this.generateBubbleDelay = this.randomInRange(1000, 3500);
+  this.generateBubbleDelay = this.randomInRange(1000, 3000);
 }
 
 Typer.PlayScene.prototype.generateNormalBubble = function()

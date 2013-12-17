@@ -146,28 +146,28 @@ Gemu.World.prototype.addScene = function(scene)
   self.scenes.push(scene);
 }
 
-Gemu.World.prototype.activateScene = function(scene) 
+Gemu.World.prototype.activateScene = function(scene, data) 
 {
   var self = this;
 
   self.scenes.forEach(function(s) {
     if (s === scene) {
-      s.active = true;
+      s.activate(data);
     } else {
-      s.active = false;
+      s.deactivate();
     }
   });
 }
 
-Gemu.World.prototype.activateSceneByName = function(name)
+Gemu.World.prototype.activateSceneByName = function(name, data)
 {
   var self = this;
 
   self.scenes.forEach(function(s) {
     if (s.name === name) {
-      s.active = true;
+      s.activate(data);
     } else {
-      s.active = false;
+      s.deactivate();
     }
   });
 }

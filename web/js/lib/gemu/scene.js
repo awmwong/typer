@@ -13,6 +13,17 @@ Gemu.Scene = function(params)
   this.name = params.name;
 }
 
+Gemu.Scene.prototype.activate = function(data)
+{
+  this.active = true;
+  this.sceneData = data;
+}
+
+Gemu.Scene.prototype.deactivate = function(data)
+{
+  this.active = false;
+}
+
 Gemu.Scene.prototype.addEntity = function(entity)
 {
   this.entities.push(entity) 

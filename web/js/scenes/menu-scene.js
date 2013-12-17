@@ -5,6 +5,8 @@ Typer.MenuScene = function(params)
   Gemu.Scene.call(this, params);
   var self = this;
 
+  this.name = "menuScene";
+
   // 'typer' button
   this.typerButton = new Typer.Button({
     position : {x : 0, y: 250},
@@ -12,6 +14,8 @@ Typer.MenuScene = function(params)
     text : "typer",
     fontSize : "72px"
   });
+
+  this.typerButton.enabled = false;
 
   Gemu.Util.centerHorizontally(this.typerButton);
 
@@ -25,17 +29,9 @@ Typer.MenuScene = function(params)
     fontSize : "60px"
   });
 
-  this.newGameButton.eventManager.bind('touchstart', function(){
-    self.newGameButton.selected = true;
-    Gemu.World.instance.activateSceneByName('playScene');
-  });
-
   this.newGameButton.eventManager.bind('touchend', function(){
-    self.newGameButton.selected = false;
-  });
+    Gemu.World.instance.activateSceneByName('playScene');
 
-  this.newGameButton.eventManager.bind('touchout', function(){
-    self.newGameButton.selected = false;
   });
 
   Gemu.Util.centerHorizontally(this.newGameButton);
@@ -47,18 +43,6 @@ Typer.MenuScene = function(params)
     size : {width: 500, height : 150 },
     text : "leaderboard",
     fontSize : "60px"
-  });
-
-  this.leaderboardButton.eventManager.bind('touchstart', function(){
-    self.leaderboardButton.selected = true;
-  });
-
-  this.leaderboardButton.eventManager.bind('touchend', function(){
-    self.leaderboardButton.selected = false;
-  });
-
-  this.leaderboardButton.eventManager.bind('touchout', function(){
-    self.leaderboardButton.selected = false;
   });
 
   Gemu.Util.centerHorizontally(this.leaderboardButton);

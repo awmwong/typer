@@ -2,8 +2,10 @@ var Typer = Typer || {};
 
 Typer.Button = function (params)
 {
+  var self = this;
+
   Gemu.Entity.call(this, params);
-  
+
   if (params.strokeStyle) {
     this.strokeStyle = params.strokeStyle;
   } else {
@@ -29,6 +31,25 @@ Typer.Button = function (params)
   }
 
   this.selected = false;
+  this.enabled = true;
+
+  this.eventManager.bind('touchstart', function(){
+    if (!self.enabled) return;
+
+    self.selected = true;
+  });
+
+  this.eventManager.bind('touchout', function(){
+    if (!self.enabled) return;
+
+    self.selected = false;
+  });
+
+  this.eventManager.bind('touchend', function(){
+    if (!self.enabled) return;
+
+    self.selected = false;
+  });
 }
 
 Typer.Button.prototype = Object.create(Gemu.Entity.prototype);

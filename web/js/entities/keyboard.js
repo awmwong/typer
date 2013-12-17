@@ -60,21 +60,14 @@ Typer.Keyboard.prototype.setupKeyboard = function()
     // HACK for A & L hit zones.
     if (key === 'A') {
       this.AKeyEntity = keyEntity;
-      console.log('A startX: ' + startX);
-      console.log('A startY: ' + startY);
     }
 
     if (key === 'L') {
       this.LKeyEntity = keyEntity;
-      console.log('A startX: ' + startX);
-      console.log('A startY: ' + startY);
     }
 
     startX += keyEntity.size.width;
     startX += 4;
-
-
-
   }
 
   // Setup the third row;
