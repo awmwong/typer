@@ -24,7 +24,6 @@
   //   score : 9999
   // });
   world.run();
-
 })(App);
 
 

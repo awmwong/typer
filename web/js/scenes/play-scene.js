@@ -110,6 +110,8 @@ Typer.PlayScene.prototype.reset = function()
   this.generateBubbleDelay = 0;
   this.lastGeneratedBubbleTime = new Date().getTime();
 
+  this.startTime = new Date().getTime();
+
   // Ice Boxes
   this.iceBoxes = [];
 
@@ -118,10 +120,21 @@ Typer.PlayScene.prototype.reset = function()
 
   this.score = 0;
   this.bubbleCounter = 0;
+  this.freezes = 0;
+  this.bombs = 0;
+  this.lifes = 0;
 
   this.maxHP = 25;
   this.curHP = this.maxHP;
+  this.ending = false;
 
+}
+
+Typer.PlayScene.prototype.activate = function()
+{
+  _super(Gemu.Scene, 'activate', this, arguments);
+
+  this.reset();
 }
 
 Typer.PlayScene.prototype.render = function(ctx)
@@ -152,13 +165,18 @@ Typer.PlayScene.prototype.update = function()
 {
   _super(Gemu.Scene, 'update', this, arguments);
 
-  if (this.curHP === 0) {
-    Gemu.World.instance.activateSceneByName('endScene', { score : this.score });
-    this.reset();
-  }
-
   this.iceBoxes = this.cleanupBoxes(this.iceBoxes.slice());
   this.bombBoxes = this.cleanupBoxes(this.bombBoxes.slice());
+
+  if (this.ending == true) {
+    return;
+  }
+
+  if (this.curHP === 0) {
+    this.ending = true;
+    this.endGame();
+    return;
+  }
 
   var elapsed = new Date().getTime() - this.lastGeneratedBubbleTime;
 
@@ -167,6 +185,39 @@ Typer.PlayScene.prototype.update = function()
   }
 
 
+}
+
+Typer.PlayScene.prototype.endGame = function ()
+{
+  var bubble = this.generateBombBubble({ word : ' game over '});
+  var self = this;
+  bubble.setPosition(0, this.keyboardEntity.position.y / 2);
+  bubble.velocity = { x : 0, y : 0};
+
+  Gemu.Util.centerHorizontally(bubble);
+
+  this.addEntity(bubble);
+  this.bindBubble(bubble);
+
+  bubble.eventManager.bind('thresholdTouched', this.onBubbleThresholdTouched.bind(this));
+  bubble.eventManager.bind('bubbleCompleted', this.onBubbleCompleted.bind(this));
+
+  setTimeout(function(){
+    bubble.eventManager.raiseEvent('bubbleCompleted', bubble);
+
+    setTimeout(function(){
+      Gemu.World.instance.activateSceneByName('endScene',
+        { 
+          score : self.score,
+          bubbleCounter : self.bubbleCounter,
+          elapsed : new Date().getTime() - self.startTime,
+          freezes : self.freezes,
+          bombs : self.bombs,
+          lifes : self.lifes
+
+        });
+    }, 2000);
+  }, 1000);
 }
 
 Typer.PlayScene.prototype.handleEvent = function(event)
@@ -300,13 +351,17 @@ Typer.PlayScene.prototype.generateIceBubble = function()
   return bubble;
 }
 
-Typer.PlayScene.prototype.generateBombBubble = function()
+Typer.PlayScene.prototype.generateBombBubble = function(params)
 {
   var self = this;
 
+  var params = params || {};
+
+  var theWord = params.word || this.getRandomWord();
+
   var bubble = new Typer.BombBubble({
     position : { x : this.randomInRange(0, 500), y : - 25 },
-    word : this.getRandomWord(),
+    word : theWord,
     velocity : { x : 0, y : this.getBubbleSpeed(1.0) }
   });
 
