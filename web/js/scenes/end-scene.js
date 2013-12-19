@@ -6,7 +6,6 @@ Typer.EndScene = function(params)
   var self = this;
 
   this.name = 'endScene';
-
 }
 
 Typer.EndScene.prototype = Object.create(Gemu.Scene.prototype);
@@ -37,9 +36,37 @@ Typer.EndScene.prototype.activate = function(data)
     fontSize : "60px"
   });
 
+  this.posted = false;
   this.postButton.eventManager.bind('touchend', function(){
+    if (this.posted === false)  {
+      if (cards.kik) {
+        cards.kik.getUser(function (user) {
+          if ( !user ) {
+            // user denied access to their information
+            return;
+          }
 
-    // TODO POST LEADERBOARD
+          TyperAPI('/game/create', {
+              'username' : user.username,
+              'score' : self.sceneData.score,
+              'duration' : self.sceneData.duration,
+              'bubbles' : self.sceneData.bubbles,
+              'bombs' : self.sceneData.bombs,
+              'freezes' : self.sceneData.freezes,
+              'lifes' : self.sceneData.lifes
+            }, function(status, response) {
+
+              if (status === true) {
+                console.log("Score posted!");
+                this.posted === true;
+              }
+          });
+        });
+      }
+    } else {
+      
+    }
+
 
   });
 
@@ -57,8 +84,8 @@ Typer.EndScene.prototype.activate = function(data)
   this.kikButton.eventManager.bind('touchend', function(){
     if (cards && cards.kik) {
       cards.kik.send({
-          title     : "Who needs mario typing?",
-          text      : "Beat this! " + self.sceneData.score.toString()
+          title     : "Who needs Mario typing?!",
+          text      : "I just scored: " + self.sceneData.score.toString()
       });
     }
   });

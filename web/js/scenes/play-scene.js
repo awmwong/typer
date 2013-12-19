@@ -124,7 +124,7 @@ Typer.PlayScene.prototype.reset = function()
   this.bombs = 0;
   this.lifes = 0;
 
-  this.maxHP = 25;
+  this.maxHP = 5;
   this.curHP = this.maxHP;
   this.ending = false;
 
@@ -209,8 +209,8 @@ Typer.PlayScene.prototype.endGame = function ()
       Gemu.World.instance.activateSceneByName('endScene',
         { 
           score : self.score,
-          bubbleCounter : self.bubbleCounter,
-          elapsed : new Date().getTime() - self.startTime,
+          bubbles : self.bubbleCounter,
+          duration : new Date().getTime() - self.startTime,
           freezes : self.freezes,
           bombs : self.bombs,
           lifes : self.lifes
