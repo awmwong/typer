@@ -105,8 +105,6 @@ Typer.PlayScene.prototype.reset = function()
   this.entities = [];
   this.addEntity(this.keyboardEntity);
 
-
-
   this.generateBubbleDelay = 0;
   this.lastGeneratedBubbleTime = new Date().getTime();
 
@@ -124,7 +122,7 @@ Typer.PlayScene.prototype.reset = function()
   this.bombs = 0;
   this.lifes = 0;
 
-  this.maxHP = 5;
+  this.maxHP = 25;
   this.curHP = this.maxHP;
   this.ending = false;
 
@@ -183,8 +181,6 @@ Typer.PlayScene.prototype.update = function()
   if (elapsed >= this.generateBubbleDelay) {
     this.generateNewBubble();
   }
-
-
 }
 
 Typer.PlayScene.prototype.endGame = function ()
@@ -202,11 +198,16 @@ Typer.PlayScene.prototype.endGame = function ()
   bubble.eventManager.bind('thresholdTouched', this.onBubbleThresholdTouched.bind(this));
   bubble.eventManager.bind('bubbleCompleted', this.onBubbleCompleted.bind(this));
 
+  this.explodeIceBubble(bubble);
+
   setTimeout(function(){
     bubble.eventManager.raiseEvent('bubbleCompleted', bubble);
 
     setTimeout(function(){
-      Gemu.World.instance.activateSceneByName('endScene',
+
+      var endScene = new Typer.EndScene();
+
+      Gemu.World.instance.startScene(endScene,
         { 
           score : self.score,
           bubbles : self.bubbleCounter,
@@ -217,7 +218,7 @@ Typer.PlayScene.prototype.endGame = function ()
 
         });
     }, 2000);
-  }, 1000);
+  }, 1500);
 }
 
 Typer.PlayScene.prototype.handleEvent = function(event)
@@ -322,7 +323,7 @@ Typer.PlayScene.prototype.generateNewBubble = function()
   bubble.eventManager.bind('bubbleCompleted', this.onBubbleCompleted.bind(this));
 
   this.lastGeneratedBubbleTime = new Date().getTime();
-  this.generateBubbleDelay = this.randomInRange(1000, 3000);
+  this.generateBubbleDelay = this.getBubbleDelay();
 }
 
 Typer.PlayScene.prototype.generateNormalBubble = function()
@@ -330,7 +331,7 @@ Typer.PlayScene.prototype.generateNormalBubble = function()
   return new Typer.Bubble({
    position : { x : this.randomInRange(0, 500), y : - 25 },
    word : this.getRandomWord(),
-   velocity : { x : 0, y : this.getBubbleSpeed(0.5) }
+   velocity : { x : 0, y : this.getBubbleSpeed(0.4) }
  })
 }
 
@@ -593,4 +594,13 @@ Typer.PlayScene.prototype.getBubbleSpeed = function(baseSpeed)
 {
   var incrementAmount = this.bubbleCounter / 100;
   return Math.min(2.0, baseSpeed + incrementAmount)
+}
+
+Typer.PlayScene.prototype.getBubbleDelay = function()
+{
+  var fastest = 1000;
+  var base = 2500
+  var slowest = 4000;
+
+  return this.randomInRange(Math.max(1000, base - this.bubbleCounter * 100), slowest);
 }

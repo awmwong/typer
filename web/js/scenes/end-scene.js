@@ -18,7 +18,7 @@ Typer.EndScene.prototype.activate = function(data)
   
   // 'score' button
   this.scoreButton = new Typer.Button({
-    position : {x : 0, y: 175},
+    position : {x : 0, y: Gemu.World.instance.gameWindow.height / 8},
     size : {width : 500, height : 150 },
     text : this.sceneData.score.toString(),
     fontSize : "72px"
@@ -64,7 +64,7 @@ Typer.EndScene.prototype.activate = function(data)
         });
       }
     } else {
-      
+
     }
 
 
@@ -102,7 +102,8 @@ Typer.EndScene.prototype.activate = function(data)
   });
 
   this.doneButton.eventManager.bind('touchend', function(){
-    Gemu.World.instance.activateSceneByName('menuScene');
+    var menuScene = new Typer.MenuScene();
+    Gemu.World.instance.startScene(menuScene);
   });
 
   Gemu.Util.centerHorizontally(this.doneButton);

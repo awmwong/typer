@@ -9,7 +9,7 @@ Typer.MenuScene = function(params)
 
   // 'typer' button
   this.typerButton = new Typer.Button({
-    position : {x : 0, y: 250},
+    position : {x : 0, y: Gemu.World.instance.gameWindow.height / 4 },
     size : {width : 500, height : 150 },
     text : "typer",
     fontSize : "72px"
@@ -30,8 +30,8 @@ Typer.MenuScene = function(params)
   });
 
   this.newGameButton.eventManager.bind('touchend', function(){
-    Gemu.World.instance.activateSceneByName('playScene');
-
+    var playScene = new Typer.PlayScene();
+    Gemu.World.instance.pushScene(playScene);
   });
 
   Gemu.Util.centerHorizontally(this.newGameButton);

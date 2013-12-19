@@ -9,20 +9,14 @@
   
   var world = new Gemu.World();
 
-  var playScene = new Typer.PlayScene();
+  // var playScene = new Typer.PlayScene();
 
   var menuScene = new Typer.MenuScene();
 
-  var endScene = new Typer.EndScene();
+  // var endScene = new Typer.EndScene();
 
-  world.addScene(playScene);
-  world.addScene(menuScene);
-  world.addScene(endScene);
+  world.startScene(menuScene);
 
-  world.activateScene(menuScene);
-  // world.activateScene(endScene, {
-  //   score : 9999
-  // });
   world.run();
 })(App);
 

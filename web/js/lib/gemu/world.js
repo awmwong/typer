@@ -126,8 +126,7 @@ Gemu.World.prototype.update = function()
 {
   var self = this;
 
-  var activeScene = self.getActiveScene();
-  activeScene.update();
+  self.getActiveScene().update();
 }
 
 Gemu.World.prototype.render = function()
@@ -139,52 +138,41 @@ Gemu.World.prototype.render = function()
   self.getActiveScene().render(self.context);
 }
 
-Gemu.World.prototype.addScene = function(scene) 
+Gemu.World.prototype.startScene = function(scene, data) 
 {
   var self = this;
 
-  self.scenes.push(scene);
+  self.scenes = [scene];
+  scene.activate(data);
 }
 
-Gemu.World.prototype.activateScene = function(scene, data) 
+Gemu.World.prototype.pushScene = function(scene, data)
 {
   var self = this;
 
-  self.scenes.forEach(function(s) {
-    if (s === scene) {
-      s.activate(data);
-    } else {
-      s.deactivate();
-    }
-  });
+  if (scene) {
+    // Deactivate the current scene
+    var currentActiveScene = self.getActiveScene();
+    currentActiveScene.deactivate();
+
+    // Add the new one.
+    self.scenes.push(scene);
+    scene.activate(data);
+  }
 }
 
-Gemu.World.prototype.activateSceneByName = function(name, data)
+
+Gemu.World.prototype.popScene = function()
 {
   var self = this;
-
-  self.scenes.forEach(function(s) {
-    if (s.name === name) {
-      s.activate(data);
-    } else {
-      s.deactivate();
-    }
-  });
+  var curScene = self.scenes.pop();
+  curScene.deactivate();
 }
 
 Gemu.World.prototype.getActiveScene = function()
 {
-  var self = this;
-
-  var retVal;
-
-  self.scenes.some(function (s) {
-    if (s.active === true) {
-      retVal = s;
-    }
-  })
-
-  return retVal;
+  // Active scene is the last element in the array
+  return this.scenes[this.scenes.length - 1];
 }
 
 Gemu.World.prototype.clearCanvas = function() {
