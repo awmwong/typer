@@ -38,7 +38,7 @@ Typer.EndScene.prototype.activate = function(data)
 
   this.posted = false;
   this.postButton.eventManager.bind('touchend', function(){
-    if (this.posted === false)  {
+    if (self.posted === false)  {
       if (cards.kik) {
         cards.kik.getUser(function (user) {
           if ( !user ) {
@@ -58,13 +58,17 @@ Typer.EndScene.prototype.activate = function(data)
 
               if (status === true) {
                 console.log("Score posted!");
-                this.posted === true;
+                self.posted = true;
+
+                var lbScene = new Typer.LeaderboardScene();
+                Gemu.World.instance.pushScene(lbScene);
               }
           });
         });
       }
     } else {
-
+      var lbScene = new Typer.LeaderboardScene();
+      Gemu.World.instance.pushScene(lbScene);
     }
 
 

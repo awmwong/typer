@@ -46,7 +46,7 @@ Typer.MenuScene = function(params)
   });
 
   this.leaderboardButton.eventManager.bind('touchend', function(){
-    var leaderboardScene = new Typer.leaderboardScene();
+    var leaderboardScene = new Typer.LeaderboardScene();
     Gemu.World.instance.pushScene(leaderboardScene);
   });
 
