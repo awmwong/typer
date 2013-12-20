@@ -8,15 +8,11 @@
   }
   
   var world = new Gemu.World();
-
-  // var playScene = new Typer.PlayScene();
-
   var menuScene = new Typer.MenuScene();
-
-  // var endScene = new Typer.EndScene();
-
   world.startScene(menuScene);
 
+  // var leaderboardScene = new Typer.LeaderboardScene();
+  // world.startScene(leaderboardScene);
   world.run();
 })(App);
 

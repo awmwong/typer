@@ -165,6 +165,11 @@ Gemu.World.prototype.pushScene = function(scene, data)
 Gemu.World.prototype.popScene = function()
 {
   var self = this;
+
+  if (self.scenes.length === 1) {
+    console.log('Trying to pop a scene stack of size 1!');
+    return;
+  }
   var curScene = self.scenes.pop();
   curScene.deactivate();
 }

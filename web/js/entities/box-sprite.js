@@ -32,6 +32,5 @@ Typer.BoxSprite.prototype.draw = function(ctx)
   ctx.strokeStyle = this.strokeStyle;
   ctx.fillStyle = this.backgroundColor;
   ctx.strokeRect(this.drawCoordinates.x, this.drawCoordinates.y, this.size.width, this.size.height);
-  ctx.fillRect(this.drawCoordinates.x, this.drawCoordinates.y, this.size.width, this.size.height);  
-
+  ctx.fillRect(this.drawCoordinates.x, this.drawCoordinates.y, this.size.width, this.size.height);
 }

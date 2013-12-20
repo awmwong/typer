@@ -45,6 +45,11 @@ Typer.MenuScene = function(params)
     fontSize : "60px"
   });
 
+  this.leaderboardButton.eventManager.bind('touchend', function(){
+    var leaderboardScene = new Typer.leaderboardScene();
+    Gemu.World.instance.pushScene(leaderboardScene);
+  });
+
   Gemu.Util.centerHorizontally(this.leaderboardButton);
   this.addEntity(this.leaderboardButton);
 }
