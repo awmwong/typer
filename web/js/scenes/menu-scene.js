@@ -37,21 +37,21 @@ Typer.MenuScene = function(params)
   Gemu.Util.centerHorizontally(this.newGameButton);
   this.addEntity(this.newGameButton);
 
-  // 'leaderboard' button
-  this.leaderboardButton = new Typer.Button({
-    position : {x : 0, y: this.newGameButton.position.y + this.newGameButton.size.height + 25},
-    size : {width: 500, height : 150 },
-    text : "leaderboard",
-    fontSize : "60px"
-  });
+  // // 'leaderboard' button
+  // this.leaderboardButton = new Typer.Button({
+  //   position : {x : 0, y: this.newGameButton.position.y + this.newGameButton.size.height + 25},
+  //   size : {width: 500, height : 150 },
+  //   text : "leaderboard",
+  //   fontSize : "60px"
+  // });
 
-  this.leaderboardButton.eventManager.bind('touchend', function(){
-    var leaderboardScene = new Typer.LeaderboardScene();
-    Gemu.World.instance.pushScene(leaderboardScene);
-  });
+  // this.leaderboardButton.eventManager.bind('touchend', function(){
+  //   var leaderboardScene = new Typer.LeaderboardScene();
+  //   Gemu.World.instance.pushScene(leaderboardScene);
+  // });
 
-  Gemu.Util.centerHorizontally(this.leaderboardButton);
-  this.addEntity(this.leaderboardButton);
+  // Gemu.Util.centerHorizontally(this.leaderboardButton);
+  // this.addEntity(this.leaderboardButton);
 }
 
 Typer.MenuScene.prototype = Object.create(Gemu.Scene.prototype);
